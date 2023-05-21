@@ -28,6 +28,9 @@ describe('Prisoner Dilemma Strategies', () => {
     expect(play(s('CDC'), TitForTat, 3)).toBe('CCDDCC')
     expect(play(s('DDD'), TitForTat, 3)).toBe('DDDDDD')
     expect(play(s('DCD'), TitForTat, 3)).toBe('DDCCDD')
+    expect(play(AlwaysCooperate, TitForTat, 3)).toBe('CCCCCC')
+    expect(play(TitForTat, AlwaysDefect, 3)).toBe('CDDDDD')
+    expect(play(AlwaysDefect, TitForTat, 3)).toBe('DDDDDD')
   })
 
   it(`should always defect once the opponent defects`, () => {
