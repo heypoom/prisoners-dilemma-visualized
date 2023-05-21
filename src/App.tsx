@@ -65,8 +65,8 @@ function App() {
       return [...game, strategy(game)]
     })
 
-  async function play5() {
-    for (let i = 0; i < 10; i++) {
+  async function playN(rounds: number) {
+    for (let i = 0; i < rounds * 2; i++) {
       await delay(12)
       play()
     }
@@ -88,7 +88,7 @@ function App() {
       if (e.key === 'c') coop()
       if (e.key === 'd') defect()
       if (e.key === 'p') play()
-      if (e.key === '5') play5()
+      if (!Number.isNaN(parseInt(e.key))) playN(parseInt(e.key))
       if (e.key === 'r') reset()
     }
 
@@ -122,10 +122,7 @@ function App() {
         ))}
 
         <div className="max-w-sm mx-auto py-4 mb-[140px]">
-          <div className="grid grid-cols-2 gap-x-4 gap-y-5">
-            <div className="text-center font-bold">A</div>
-            <div className="text-center font-bold">B</div>
-
+          <div className="grid grid-cols-8 grid-rows-2 gap-x-4 gap-y-5">
             {game.map((move, i) => (
               <div
                 key={i}
@@ -159,7 +156,7 @@ function App() {
               Play 1
             </Button>
             <Button
-              onClick={play5}
+              onClick={() => playN(5)}
               className="bg-purple-500 hover:bg-purple-600"
             >
               Play 5
