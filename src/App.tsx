@@ -1,4 +1,4 @@
-import {useState} from 'react'
+import {useCallback, useEffect, useState} from 'react'
 
 import {
   AlwaysDefect,
@@ -47,14 +47,18 @@ const Button = ({
 
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
 
+const adjustScroll = () =>
+  window.scrollTo({behavior: 'smooth', top: document.body.scrollHeight})
+
 function App() {
   const [game, setGame] = useState<boolean[]>([])
   const [strategies, setStrategies] = useState(defaultStrategies)
 
   const play = () =>
     setGame((game) => {
-      const strategyKey = strategies[game.length % 2]
+      adjustScroll()
 
+      const strategyKey = strategies[game.length % 2]
       const strategy = strategyMap[strategyKey]
       return [...game, strategy(game)]
     })
@@ -64,6 +68,8 @@ function App() {
       await delay(12)
       play()
     }
+
+    adjustScroll()
   }
 
   function handleStrategyChange(strategy: string, player: number) {
@@ -71,14 +77,30 @@ function App() {
     setStrategies([...strategies])
   }
 
-  const coop = () => setGame([...game, true])
-  const defect = () => setGame([...game, false])
+  const coop = useCallback(() => setGame([...game, true]), [game])
+  const defect = useCallback(() => setGame([...game, false]), [game])
   const reset = () => setGame([])
+
+  useEffect(() => {
+    function handleKeyPress(e: KeyboardEvent) {
+      if (e.key === 'c') coop()
+      if (e.key === 'd') defect()
+      if (e.key === 'p') play()
+      if (e.key === '5') play5()
+      if (e.key === 'r') reset()
+    }
+
+    window.addEventListener('keypress', handleKeyPress)
+
+    return () => {
+      window.removeEventListener('keypress', handleKeyPress)
+    }
+  }, [coop, defect])
 
   return (
     <div className="flex items-center justify-content min-h-[100vh] bg-black">
       <div className="flex flex-col w-full justify-center items-center gap-y-4">
-        <h1 className="text-3xl font-light">Prisoner's Dilemma</h1>
+        <h1 className="text-3xl font-light pb-3">Prisoner's Dilemma</h1>
 
         {['A', 'B'].map((player, i) => (
           <div className="flex gap-x-2" key={player}>
@@ -97,8 +119,8 @@ function App() {
           </div>
         ))}
 
-        <div className="max-w-sm mx-auto py-4">
-          <div className="grid grid-cols-2 gap-x-3 gap-y-4">
+        <div className="max-w-sm mx-auto py-4 mb-[140px]">
+          <div className="grid grid-cols-2 gap-x-4 gap-y-5">
             <div className="text-center font-bold">A</div>
             <div className="text-center font-bold">B</div>
 
@@ -107,7 +129,7 @@ function App() {
                 key={i}
                 className={`
 									flex items-center justify-center
-									gap-x-4 w-5 h-5 rounded-full text-center
+									gap-x-4 w-7 h-7 rounded-full text-center
 									${move ? 'bg-blue-500' : 'bg-red-500'}
 								`}
               />
@@ -115,27 +137,35 @@ function App() {
           </div>
         </div>
 
-        <div className="flex gap-x-4 h-14 mb-4">
-          <Button
-            onClick={coop}
-            className="bg-blue-500 focus:bg-blue-400 hover:bg-blue-600 w-14 !rounded-full border-white border-4"
-          />
-          <Button
-            onClick={defect}
-            className="bg-red-500 focus:bg-red-400 hover:bg-red-600 w-14 !rounded-full border-white border-4"
-          />
-        </div>
+        <div className="flex flex-col items-center justify-center fixed bottom-0 gap-y-3">
+          <div className="flex gap-x-4 h-14 mb-4">
+            <Button
+              onClick={coop}
+              className="w-14 bg-blue-500 focus:bg-blue-400 hover:bg-blue-600"
+            />
+            <Button
+              onClick={defect}
+              className="w-14 bg-red-500 focus:bg-red-400 hover:bg-red-600"
+            />
+          </div>
 
-        <div className="flex gap-x-4">
-          <Button onClick={play} className="bg-purple-500 hover:bg-purple-600">
-            Play 1
-          </Button>
-          <Button onClick={play5} className="bg-purple-500 hover:bg-purple-600">
-            Play 5
-          </Button>
-          <Button onClick={reset} className="bg-gray-500 hover:bg-gray-600">
-            Reset
-          </Button>
+          <div className="flex gap-x-4">
+            <Button
+              onClick={play}
+              className="bg-purple-500 hover:bg-purple-600"
+            >
+              Play 1
+            </Button>
+            <Button
+              onClick={play5}
+              className="bg-purple-500 hover:bg-purple-600"
+            >
+              Play 5
+            </Button>
+            <Button onClick={reset} className="bg-gray-500 hover:bg-gray-600">
+              Reset
+            </Button>
+          </div>
         </div>
       </div>
     </div>
