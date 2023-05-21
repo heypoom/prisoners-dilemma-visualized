@@ -1,4 +1,5 @@
 import {useCallback, useEffect, useState} from 'react'
+import {chunk} from 'lodash'
 
 import {
   AlwaysDefect,
@@ -56,7 +57,7 @@ function App() {
   const [game, setGame] = useState<boolean[]>([])
   const [strategies, setStrategies] = useState(defaultStrategies)
 
-  const play = () =>
+  const step = () =>
     setGame((game) => {
       adjustScroll()
 
@@ -68,7 +69,7 @@ function App() {
   async function playN(rounds: number) {
     for (let i = 0; i < rounds * 2; i++) {
       await delay(12)
-      play()
+      step()
     }
 
     adjustScroll()
@@ -87,7 +88,7 @@ function App() {
     function handleKeyPress(e: KeyboardEvent) {
       if (e.key === 'c') coop()
       if (e.key === 'd') defect()
-      if (e.key === 'p') play()
+      if (e.key === 's') step()
       if (!Number.isNaN(parseInt(e.key))) playN(parseInt(e.key))
       if (e.key === 'r') reset()
     }
@@ -121,22 +122,28 @@ function App() {
           </div>
         ))}
 
-        <div className="max-w-sm mx-auto py-4 mb-[140px]">
-          <div className="grid grid-cols-8 grid-rows-2 gap-x-4 gap-y-5">
-            {game.map((move, i) => (
-              <div
-                key={i}
-                className={`
-									flex items-center justify-center
-									w-7 h-7 text-center rounded-sm
-									${move ? 'bg-blue-500' : 'bg-red-500'}
-								`}
-              />
+        <div className="py-2 max-w-4xl mx-auto">
+          <div className="grid grid-cols-4 gap-x-6 gap-y-3">
+            {chunk(game, 2).map((chunk, i) => (
+              <div key={i} className="grid grid-cols-2 gap-x-3">
+                {chunk.map((move, j) => (
+                  <div
+                    key={j}
+                    className={`
+												flex
+												text-center rounded-none w-10 h-10
+												${move ? 'bg-blue-500' : 'bg-red-500'}
+											`}
+                  />
+                ))}
+              </div>
             ))}
           </div>
         </div>
 
-        <div className="flex flex-col items-center justify-center fixed bottom-0 gap-y-3">
+        <div className="mb-[120px]" />
+
+        <div className="flex flex-col items-center justify-center fixed bottom-0 gap-y-1 py-5">
           <div className="flex gap-x-4 h-14 mb-4">
             <Button
               onClick={coop}
@@ -150,16 +157,10 @@ function App() {
 
           <div className="flex gap-x-4">
             <Button
-              onClick={play}
+              onClick={step}
               className="bg-purple-500 hover:bg-purple-600"
             >
-              Play 1
-            </Button>
-            <Button
-              onClick={() => playN(5)}
-              className="bg-purple-500 hover:bg-purple-600"
-            >
-              Play 5
+              Step
             </Button>
             <Button onClick={reset} className="bg-gray-500 hover:bg-gray-600">
               Reset
