@@ -32,17 +32,17 @@ describe('Prisoner Dilemma Strategies', () => {
     expect(play(TitForTat, AlwaysDefect, 3)).toBe('CDDDDD')
     expect(play(AlwaysDefect, TitForTat, 3)).toBe('DDDDDD')
   })
-
   it(`should always defect once the opponent defects`, () => {
     expect(play(s('DCC'), GrimTrigger, 3)).toBe('DDCDCD')
     expect(play(s('CCDC'), GrimTrigger, 4)).toBe('CCCCDDCD')
   })
 
   it(`should forgive defection after 2 rounds`, () => {
-    // forgives
     expect(play(s('CDCC'), Forgive(2), 5)).toBe('CCDDCDCDCC')
+  })
 
-    // does not yet forgive!
+  it(`should not forgive detection before 2 rounds`, () => {
     expect(play(s('CDDC'), Forgive(2), 5)).toBe('CCDDDDCDCD')
+    expect(play(s('CDDC'), Forgive(5), 5)).toBe('CCDDDDCDCC')
   })
 })
