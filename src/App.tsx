@@ -6,6 +6,7 @@ import {
   TitForTat,
   AlwaysCooperate,
   GrimTrigger,
+  Random,
 } from './simulation/strategies'
 
 import {Strategy} from './@types/Strategy'
@@ -21,6 +22,7 @@ const strategyMap = {
   TitForTat,
   ForgiveTwo: Forgive(2),
   GrimTrigger,
+  Random,
 } as const satisfies Record<string, S>
 
 type StrategyKey = keyof typeof strategyMap
@@ -129,7 +131,7 @@ function App() {
                 key={i}
                 className={`
 									flex items-center justify-center
-									gap-x-4 w-7 h-7 rounded-full text-center
+									w-7 h-7 text-center rounded-sm
 									${move ? 'bg-blue-500' : 'bg-red-500'}
 								`}
               />
