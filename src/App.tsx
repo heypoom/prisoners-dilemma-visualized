@@ -18,6 +18,8 @@ import './App.css'
 type Move = boolean
 type S = Strategy<Move>
 
+const PLAY_ROUNDS = 16
+
 const strategyMap = {
   cooperate: AlwaysCooperate,
   defect: AlwaysDefect,
@@ -100,6 +102,7 @@ function App() {
       if (e.key === 'c') coop()
       if (e.key === 'd') defect()
       if (e.key === 's') step()
+      if (e.key === 'p') play(PLAY_ROUNDS)
       if (!Number.isNaN(parseInt(e.key))) play(parseInt(e.key))
       if (e.key === 'r') reset()
     }
@@ -172,7 +175,7 @@ function App() {
 
           <div className="flex gap-x-4">
             <Button
-              onClick={() => play(16)}
+              onClick={() => play(PLAY_ROUNDS)}
               className="bg-green-600 hover:bg-green-700"
             >
               Play
