@@ -172,7 +172,7 @@ function App() {
 
           <div className="flex gap-x-4">
             <Button
-              onClick={() => play(32)}
+              onClick={() => play(16)}
               className="bg-green-600 hover:bg-green-700"
             >
               Play
