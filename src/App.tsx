@@ -156,15 +156,15 @@ function App() {
 
         <div className="mb-[220px]" />
 
-        <div className="flex flex-col items-center justify-center fixed bottom-0 gap-y-1 py-5">
-          <div className="flex gap-x-4 h-14 mb-4">
+        <div className="flex flex-col items-center justify-center fixed bottom-0 gap-y-4 py-5">
+          <div className="flex gap-x-4 h-12">
             <Button
               onClick={coop}
-              className="w-14 bg-blue-500 focus:bg-blue-400 hover:bg-blue-600"
+              className="w-12 bg-blue-500 focus:bg-blue-400 hover:bg-blue-600"
             />
             <Button
               onClick={defect}
-              className="w-14 bg-red-500 focus:bg-red-400 hover:bg-red-600"
+              className="w-12 bg-red-500 focus:bg-red-400 hover:bg-red-600"
             />
           </div>
 
