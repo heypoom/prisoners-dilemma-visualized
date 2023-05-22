@@ -1,5 +1,6 @@
 import {useCallback, useEffect, useState} from 'react'
 import {chunk} from 'lodash'
+import {motion} from 'framer-motion'
 
 import {
   AlwaysDefect,
@@ -127,8 +128,9 @@ function App() {
             {chunk(game, 2).map((chunk, i) => (
               <div key={i} className="grid grid-cols-2 gap-x-3">
                 {chunk.map((move, j) => (
-                  <div
+                  <motion.div
                     key={j}
+                    animate={{y: 50}}
                     className={`
 												flex
 												text-center rounded-none w-10 h-10
@@ -141,7 +143,7 @@ function App() {
           </div>
         </div>
 
-        <div className="mb-[120px]" />
+        <div className="mb-[220px]" />
 
         <div className="flex flex-col items-center justify-center fixed bottom-0 gap-y-1 py-5">
           <div className="flex gap-x-4 h-14 mb-4">
