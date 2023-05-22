@@ -19,11 +19,11 @@ type Move = boolean
 type S = Strategy<Move>
 
 const strategyMap = {
-  Cooperate: AlwaysCooperate,
-  Defect: AlwaysDefect,
-  TitForTat,
-  ForgiveTwo: Forgive(2),
-  GrimTrigger,
+  cooperate: AlwaysCooperate,
+  defect: AlwaysDefect,
+  'tit for tat': TitForTat,
+  'grim trigger': GrimTrigger,
+  'forgive(2)': Forgive(2),
   'rand(10%)': Random(0.1),
   'rand(50%)': Random(0.5),
   'rand(80%)': Random(0.8),
@@ -32,7 +32,7 @@ const strategyMap = {
 type StrategyKey = keyof typeof strategyMap
 
 const strategyKeys = Object.keys(strategyMap) as StrategyKey[]
-const defaultStrategies: StrategyKey[] = ['TitForTat', 'Defect']
+const defaultStrategies: StrategyKey[] = ['rand(10%)', 'forgive(2)']
 
 const Button = ({
   children,
@@ -114,7 +114,9 @@ function App() {
   return (
     <div className="flex items-center justify-content min-h-[100vh] bg-black py-12">
       <div className="flex flex-col w-full justify-center items-center gap-y-4">
-        <h1 className="text-3xl font-light pb-3">Prisoner's Dilemma</h1>
+        <h1 className="text-3xl font-light pb-3 text-center">
+          Prisoner's Dilemma
+        </h1>
 
         {['A', 'B'].map((player, i) => (
           <div className="flex gap-x-2" key={player}>
@@ -134,7 +136,7 @@ function App() {
         ))}
 
         <div className="py-2 max-w-4xl mx-auto">
-          <div className="grid grid-cols-4 gap-x-6 gap-y-3">
+          <div className="grid sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-8 gap-x-6 gap-y-3">
             {chunk(game, 2).map((chunk, i) => (
               <div key={i} className="grid grid-cols-2 gap-x-3">
                 {chunk.map((move, j) => (
@@ -170,11 +172,19 @@ function App() {
 
           <div className="flex gap-x-4">
             <Button
+              onClick={() => play(32)}
+              className="bg-green-600 hover:bg-green-700"
+            >
+              Play
+            </Button>
+
+            <Button
               onClick={step}
               className="bg-purple-500 hover:bg-purple-600"
             >
               Step
             </Button>
+
             <Button onClick={reset} className="bg-gray-500 hover:bg-gray-600">
               Reset
             </Button>
