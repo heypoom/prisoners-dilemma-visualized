@@ -41,12 +41,14 @@ const Button = ({
   className?: string
   onClick?: React.MouseEventHandler<HTMLButtonElement>
 }) => (
-  <button
+  <motion.button
+    initial={{y: 50}}
+    animate={{y: 0}}
     className={`rounded-md ${className} text-2xl px-2 py-1 cursor-pointer`}
     onClick={onClick}
   >
     {children}
-  </button>
+  </motion.button>
 )
 
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
@@ -58,23 +60,29 @@ function App() {
   const [game, setGame] = useState<boolean[]>([])
   const [strategies, setStrategies] = useState(defaultStrategies)
 
-  const step = () =>
-    setGame((game) => {
+  const step = useCallback(
+    () =>
+      setGame((game) => {
+        adjustScroll()
+
+        const strategyKey = strategies[game.length % 2]
+        const strategy = strategyMap[strategyKey]
+        return [...game, strategy(game)]
+      }),
+    [strategies]
+  )
+
+  const play = useCallback(
+    async (rounds: number) => {
+      for (let i = 0; i < rounds * 2; i++) {
+        await delay(12)
+        step()
+      }
+
       adjustScroll()
-
-      const strategyKey = strategies[game.length % 2]
-      const strategy = strategyMap[strategyKey]
-      return [...game, strategy(game)]
-    })
-
-  async function playN(rounds: number) {
-    for (let i = 0; i < rounds * 2; i++) {
-      await delay(12)
-      step()
-    }
-
-    adjustScroll()
-  }
+    },
+    [step]
+  )
 
   function handleStrategyChange(strategy: string, player: number) {
     strategies[player] = strategy as StrategyKey
@@ -90,7 +98,7 @@ function App() {
       if (e.key === 'c') coop()
       if (e.key === 'd') defect()
       if (e.key === 's') step()
-      if (!Number.isNaN(parseInt(e.key))) playN(parseInt(e.key))
+      if (!Number.isNaN(parseInt(e.key))) play(parseInt(e.key))
       if (e.key === 'r') reset()
     }
 
@@ -99,7 +107,7 @@ function App() {
     return () => {
       window.removeEventListener('keypress', handleKeyPress)
     }
-  }, [coop, defect])
+  }, [coop, defect, play, step])
 
   return (
     <div className="flex items-center justify-content min-h-[100vh] bg-black">
@@ -133,7 +141,7 @@ function App() {
                     animate={{y: 50}}
                     className={`
 												flex
-												text-center rounded-none w-10 h-10
+												text-center rounded-sm w-10 h-10
 												${move ? 'bg-blue-500' : 'bg-red-500'}
 											`}
                   />
