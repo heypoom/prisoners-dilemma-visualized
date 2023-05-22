@@ -24,7 +24,9 @@ const strategyMap = {
   TitForTat,
   ForgiveTwo: Forgive(2),
   GrimTrigger,
-  Random,
+  'rand(10%)': Random(0.1),
+  'rand(50%)': Random(0.5),
+  'rand(80%)': Random(0.8),
 } as const satisfies Record<string, S>
 
 type StrategyKey = keyof typeof strategyMap
@@ -110,7 +112,7 @@ function App() {
   }, [coop, defect, play, step])
 
   return (
-    <div className="flex items-center justify-content min-h-[100vh] bg-black">
+    <div className="flex items-center justify-content min-h-[100vh] bg-black py-12">
       <div className="flex flex-col w-full justify-center items-center gap-y-4">
         <h1 className="text-3xl font-light pb-3">Prisoner's Dilemma</h1>
 
@@ -138,7 +140,8 @@ function App() {
                 {chunk.map((move, j) => (
                   <motion.div
                     key={j}
-                    animate={{y: 50}}
+                    initial={{y: 70}}
+                    animate={{y: 0}}
                     className={`
 												flex
 												text-center rounded-sm w-10 h-10

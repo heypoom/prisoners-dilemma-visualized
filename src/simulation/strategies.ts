@@ -11,7 +11,10 @@ function opponentMoves(turns: boolean[]) {
 export const AlwaysCooperate: S = () => true
 export const AlwaysDefect: S = () => false
 
-export const Random: S = () => Math.random() > 0.5
+export const Random =
+  (chance = 0.5): S =>
+  () =>
+    Math.random() > chance
 
 /**
  * Tit-for-tat involves starting with cooperation, and then
